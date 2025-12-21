@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Enrollment</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 30px auto; }
+    table { width:100%; border-collapse: collapse; margin-top: 14px; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background:#f7f7f7; }
+    select, input { padding:8px; width:100%; }
+    .grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+    .msg { margin: 10px 0; padding: 10px; border-radius: 8px; }
+    .error { background:#ffe5e5; }
+    .success { background:#e6ffea; }
+  </style>
+</head>
+<body>
+  <h2>Enrollment</h2>
+  <p><a href="{{ url_for('dashboard') }}">← Back</a></p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="msg {{category}}">{{message}}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <div class="grid">
+      <div>
+        <label>Student</label>
+        <select name="student_id">
+          <option value="">-- Select --</option>
+          {% for s in students_list %}
+            <option value="{{ s.Student_ID }}">{{ s.Student_ID }} - {{ s.First_Name }} {{ s.Last_Name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Course</label>
+        <select name="course_id">
+          <option value="">-- Select --</option>
+          {% for c in courses_list %}
+            <option value="{{ c.Course_ID }}">{{ c.Course_Code }} - {{ c.Course_Name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Semester</label>
+        <select name="semester_id">
+          <option value="">-- Select --</option>
+          {% for sem in semester_list %}
+            <option value="{{ sem.Semester_ID }}">{{ sem.Semester_Name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <button type="submit">Enroll</button>
+    </div>
+  </form>
+
+  <h3>All Enrollments</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Student</th><th>Course</th><th>Semester</th><th>Date</th><th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in enrollments %}
+        <tr>
+          <td>{{ e.Enrollment_ID }}</td>
+          <td>{{ e.Student_ID }} - {{ e.Student_Name }}</td>
+          <td>{{ e.Course_Code }} - {{ e.Course_Name }}</td>
+          <td>{{ e.Semester_Name }}</td>
+          <td>{{ e.Enrollment_Date }}</td>
+          <td>{{ e.Grade }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

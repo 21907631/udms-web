@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Students CRUD</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 30px auto; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background:#f7f7f7; }
+    .grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+    input, select { padding:8px; width:100%; }
+    button { padding:10px 14px; margin-right:8px; }
+    .msg { margin: 10px 0; padding: 10px; border-radius: 8px; }
+    .error { background:#ffe5e5; }
+    .success { background:#e6ffea; }
+  </style>
+</head>
+<body>
+
+  <h2>Students (CRUD)</h2>
+  <p><a href="{{ url_for('dashboard') }}">← Back</a></p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="msg {{category}}">{{message}}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <div class="grid">
+      <div>
+        <label>Student_ID (Update/Delete)</label>
+        <input name="student_id" placeholder="e.g. 1" />
+      </div>
+      <div>
+        <label>First Name *</label>
+        <input name="first_name" />
+      </div>
+      <div>
+        <label>Last Name *</label>
+        <input name="last_name" />
+      </div>
+      <div>
+        <label>Email *</label>
+        <input name="email" />
+      </div>
+      <div>
+        <label>Phone</label>
+        <input name="phone" />
+      </div>
+      <div>
+        <label>Address</label>
+        <input name="address" />
+      </div>
+      <div>
+        <label>Date of Admission (YYYY-MM-DD) *</label>
+        <input name="date_of_admission" />
+      </div>
+      <div>
+        <label>Department *</label>
+        <select name="department_id">
+          <option value="">-- Select --</option>
+          {% for d in departments %}
+            <option value="{{ d.Department_ID }}">{{ d.Department_ID }} - {{ d.Department_Name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top: 12px;">
+      <button name="action" value="create">Create</button>
+      <button name="action" value="update">Update</button>
+      <button name="action" value="delete" onclick="return confirm('Delete this student?');">Delete</button>
+    </div>
+  </form>
+
+  <h3 style="margin-top: 22px;">All Students</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>First</th><th>Last</th><th>Email</th><th>Phone</th><th>Address</th><th>Admission</th><th>Dept</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+        <tr>
+          <td>{{ s.Student_ID }}</td>
+          <td>{{ s.First_Name }}</td>
+          <td>{{ s.Last_Name }}</td>
+          <td>{{ s.Email }}</td>
+          <td>{{ s.Phone }}</td>
+          <td>{{ s.Address }}</td>
+          <td>{{ s.Date_of_Admission }}</td>
+          <td>{{ s.Department_ID }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>

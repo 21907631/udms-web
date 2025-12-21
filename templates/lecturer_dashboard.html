@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Lecturer Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 30px auto; }
+    table { width:100%; border-collapse: collapse; margin-top: 14px; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background:#f7f7f7; }
+  </style>
+</head>
+<body>
+  <h2>Lecturer Dashboard</h2>
+  <p><a href="{{ url_for('dashboard') }}">← Back</a></p>
+
+  <h3>My Courses</h3>
+  <ul>
+    {% for c in courses %}
+      <li>
+        <a href="{{ url_for('lecturer_dashboard', course_id=c.Course_ID) }}">
+          {{ c.Course_Code }} - {{ c.Course_Name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% if selected_course %}
+    <h3>Enrolled Students (selected course)</h3>
+    {% if not enrolled %}
+      <p>No students found.</p>
+    {% else %}
+      <table>
+        <thead>
+          <tr><th>Student_ID</th><th>Name</th><th>Semester</th><th>Date</th><th>Grade</th></tr>
+        </thead>
+        <tbody>
+          {% for r in enrolled %}
+            <tr>
+              <td>{{ r.Student_ID }}</td>
+              <td>{{ r.Student_Name }}</td>
+              <td>{{ r.Semester_Name }}</td>
+              <td>{{ r.Enrollment_Date }}</td>
+              <td>{{ r.Grade }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  {% endif %}
+</body>
+</html>

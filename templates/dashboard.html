@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>UDMS Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+    a.btn { display:inline-block; padding:10px 14px; border:1px solid #ddd; border-radius:10px; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <h2>UDMS Dashboard</h2>
+  <p>Logged in as <b>{{user.Username}}</b> | Role: <b>{{user.Role}}</b></p>
+
+  <div class="row">
+    {% if role in ['admin','staff'] %}
+      <a class="btn" href="{{ url_for('students') }}">Students (CRUD)</a>
+      <a class="btn" href="{{ url_for('enrollment') }}">Enrollment</a>
+    {% endif %}
+
+    {% if role == 'admin' %}
+      <a class="btn" href="{{ url_for('user_accounts') }}">User Accounts (Admin)</a>
+    {% endif %}
+
+    {% if role == 'lecturer' %}
+      <a class="btn" href="{{ url_for('lecturer_dashboard') }}">Lecturer Dashboard</a>
+    {% endif %}
+
+    {% if role == 'student' %}
+      <a class="btn" href="{{ url_for('my_enrollments') }}">My Enrollments</a>
+      <a class="btn" href="{{ url_for('my_results') }}">My Exam Results</a>
+    {% endif %}
+
+    <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</body>
+</html>
