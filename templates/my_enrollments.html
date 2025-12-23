@@ -3,36 +3,53 @@
 <head>
   <meta charset="utf-8" />
   <title>My Enrollments</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 1100px; margin: 30px auto; }
-    table { width:100%; border-collapse: collapse; margin-top: 12px; }
-    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
-    th { background:#f7f7f7; }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h2>My Enrollments</h2>
-  <p><a href="{{ url_for('dashboard') }}">← Back</a></p>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h2>My Enrollments</h2>
+          <div class="sub">Student portal: view your enrolled courses.</div>
+        </div>
+      </div>
+      <a class="btn ghost" href="{{ url_for('dashboard') }}">← Back</a>
+    </div>
 
-  {% if not rows %}
-    <p>No enrollments found.</p>
-  {% else %}
-    <table>
-      <thead>
-        <tr><th>ID</th><th>Course</th><th>Semester</th><th>Date</th><th>Grade</th></tr>
-      </thead>
-      <tbody>
-        {% for r in rows %}
-          <tr>
-            <td>{{ r.Enrollment_ID }}</td>
-            <td>{{ r.Course_Code }} - {{ r.Course_Name }}</td>
-            <td>{{ r.Semester_Name }}</td>
-            <td>{{ r.Enrollment_Date }}</td>
-            <td>{{ r.Grade }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% endif %}
+    <div class="card">
+      {% if not rows %}
+        <div class="sub">No enrollments found.</div>
+      {% else %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Enrollment_ID</th>
+              <th>Course_Code</th>
+              <th>Course_Name</th>
+              <th>Semester</th>
+              <th>Enrollment_Date</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in rows %}
+              <tr>
+                <td>{{ r.Enrollment_ID }}</td>
+                <td>{{ r.Course_Code }}</td>
+                <td>{{ r.Course_Name }}</td>
+                <td>{{ r.Semester_Name }}</td>
+                <td>{{ r.Enrollment_Date }}</td>
+                <td>{{ r.Grade }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+
+    <div class="footer">Student view only · Data from Railway MySQL</div>
+  </div>
 </body>
 </html>

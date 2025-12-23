@@ -3,104 +3,107 @@
 <head>
   <meta charset="utf-8" />
   <title>User Accounts</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 30px auto; }
-    table { width:100%; border-collapse: collapse; margin-top: 14px; }
-    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
-    th { background:#f7f7f7; }
-    input, select { padding:8px; width:100%; }
-    .grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
-    .msg { margin: 10px 0; padding: 10px; border-radius: 8px; }
-    .error { background:#ffe5e5; }
-    .success { background:#e6ffea; }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h2>User Accounts (Admin)</h2>
-  <p><a href="{{ url_for('dashboard') }}">← Back</a></p>
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="msg {{category}}">{{message}}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-
-  <form method="post">
-    <div class="grid">
-      <div>
-        <label>User_ID (for reset/delete)</label>
-        <input name="user_id" placeholder="e.g. 1" />
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h2>User Account Management</h2>
+          <div class="sub">Admin can create, reset, and delete user accounts</div>
+        </div>
       </div>
-
-      <div>
-        <label>Username</label>
-        <input name="username" />
-      </div>
-
-      <div>
-        <label>Password (for create/reset)</label>
-        <input name="password" />
-      </div>
-
-      <div>
-        <label>Role</label>
-        <select name="role">
-          <option value="">-- Select --</option>
-          <option>Admin</option>
-          <option>Staff</option>
-          <option>Lecturer</option>
-          <option>Student</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Student_ID (if Student)</label>
-        <select name="student_id">
-          <option value="">-- None --</option>
-          {% for s in students_list %}
-            <option value="{{ s.Student_ID }}">{{ s.Student_ID }} - {{ s.First_Name }} {{ s.Last_Name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div>
-        <label>Lecturer_ID (if Lecturer)</label>
-        <select name="lecturer_id">
-          <option value="">-- None --</option>
-          {% for l in lecturers_list %}
-            <option value="{{ l.Lecturer_ID }}">{{ l.Lecturer_ID }} - {{ l.First_Name }} {{ l.Last_Name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+      <a class="btn ghost" href="{{ url_for('dashboard') }}">← Back</a>
     </div>
 
-    <div style="margin-top:12px;">
-      <button name="action" value="create">Create</button>
-      <button name="action" value="reset">Reset Password</button>
-      <button name="action" value="delete" onclick="return confirm('Delete this account?');">Delete</button>
-    </div>
-  </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{category}}">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-  <h3>All Accounts</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>User_ID</th><th>Username</th><th>Role</th><th>Student_ID</th><th>Lecturer_ID</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for a in accounts %}
-        <tr>
-          <td>{{ a.User_ID }}</td>
-          <td>{{ a.Username }}</td>
-          <td>{{ a.Role }}</td>
-          <td>{{ a.Student_ID }}</td>
-          <td>{{ a.Lecturer_ID }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <div class="card">
+      <h3>Create / Update Account</h3>
+
+      <form method="post" style="margin-top:12px;">
+        <div class="grid grid-3">
+          <div>
+            <label>Username *</label>
+            <input name="username" placeholder="username">
+          </div>
+
+          <div>
+            <label>Password *</label>
+            <input name="password" type="password" placeholder="••••••••">
+          </div>
+
+          <div>
+            <label>Role *</label>
+            <select name="role">
+              <option value="">-- Select --</option>
+              <option value="Admin">Admin</option>
+              <option value="Staff">Staff</option>
+              <option value="Lecturer">Lecturer</option>
+              <option value="Student">Student</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Student_ID (if Student)</label>
+            <input name="student_id">
+          </div>
+
+          <div>
+            <label>Lecturer_ID (if Lecturer)</label>
+            <input name="lecturer_id">
+          </div>
+        </div>
+
+        <div class="btnrow">
+          <button class="btn primary" name="action" value="create" type="submit">Create</button>
+          <button class="btn success" name="action" value="reset" type="submit">Reset Password</button>
+          <button class="btn danger" name="action" value="delete" type="submit"
+            onclick="return confirm('Delete this user account?');">
+            Delete
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h3>All User Accounts</h3>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>User_ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Student_ID</th>
+            <th>Lecturer_ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            <tr>
+              <td>{{ u.User_ID }}</td>
+              <td>{{ u.Username }}</td>
+              <td>{{ u.Role }}</td>
+              <td>{{ u.Student_ID }}</td>
+              <td>{{ u.Lecturer_ID }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      Admin-only access · Security enforced in Flask backend
+    </div>
+  </div>
 </body>
 </html>

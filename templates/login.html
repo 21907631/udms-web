@@ -3,33 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <title>UDMS Login</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 420px; margin: 60px auto; }
-    .card { padding: 18px; border: 1px solid #ddd; border-radius: 10px; }
-    input { width: 100%; padding: 10px; margin: 8px 0; }
-    button { padding: 10px 14px; width: 100%; }
-    .msg { margin: 10px 0; padding: 10px; border-radius: 8px; }
-    .error { background:#ffe5e5; }
-    .success { background:#e6ffea; }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="card">
-    <h2>UDMS Login</h2>
+  <div class="container" style="max-width:520px;">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h2>UDMS</h2>
+          <div class="sub">University Database Management System</div>
+        </div>
+      </div>
+    </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="msg {{category}}">{{message}}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+    <div class="card">
+      <h2>Sign in</h2>
+      <div class="sub">Access your dashboard</div>
 
-    <form method="post">
-      <input name="username" placeholder="Username" />
-      <input name="password" type="password" placeholder="Password" />
-      <button type="submit">Login</button>
-    </form>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert {{category}}">{{message}}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="post">
+        <label>Username</label>
+        <input name="username" />
+
+        <label>Password</label>
+        <input type="password" name="password" />
+
+        <div class="btnrow">
+          <button class="btn primary" type="submit" style="width:100%">Login</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="footer">Flask Web App · Railway MySQL · Render</div>
   </div>
 </body>
 </html>
