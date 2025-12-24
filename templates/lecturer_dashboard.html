@@ -12,46 +12,71 @@
         <div class="logo"></div>
         <div>
           <h2>Lecturer Dashboard</h2>
-          <div class="sub">Courses you teach and enrolled students</div>
+          <div class="sub">Select a course to view enrolled students</div>
         </div>
       </div>
       <a class="btn ghost" href="{{ url_for('dashboard') }}">← Back</a>
     </div>
 
-    {% if not rows %}
-      <div class="card">
-        <div class="sub">No courses or students assigned to you.</div>
-      </div>
-    {% else %}
-      <div class="card">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Course_Code</th>
-              <th>Course_Name</th>
-              <th>Student_ID</th>
-              <th>Student_Name</th>
-              <th>Semester</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for r in rows %}
-              <tr>
-                <td>{{ r.Course_Code }}</td>
-                <td>{{ r.Course_Name }}</td>
-                <td>{{ r.Student_ID }}</td>
-                <td>{{ r.Student_Name }}</td>
-                <td>{{ r.Semester_Name }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
+    <!-- Courses list -->
+    <div class="card">
+      <h3>My Courses</h3>
 
-    <div class="footer">
-      Lecturer access · View only · Data from Railway MySQL
+      {% if not courses %}
+        <div class="sub">No courses assigned to you yet.</div>
+      {% else %}
+        <form method="get" action="{{ url_for('lecturer_dashboard') }}" style="margin-top:12px;">
+          <label>Select Course</label>
+          <select name="course_id" onchange="this.form.submit()">
+            <option value="">-- Choose a course --</option>
+            {% for c in courses %}
+              <option value="{{ c.Course_ID }}" {% if selected_course and (c.Course_ID|string) == (selected_course|string) %}selected{% endif %}>
+                {{ c.Course_Code }} - {{ c.Course_Name }}
+              </option>
+            {% endfor %}
+          </select>
+          <div class="sub" style="margin-top:8px;">Tip: selecting a course will load enrolled students.</div>
+        </form>
+      {% endif %}
     </div>
+
+    <!-- Enrolled students -->
+    <div class="card" style="margin-top:14px;">
+      <h3>Enrolled Students</h3>
+
+      {% if not selected_course %}
+        <div class="sub">Please select a course above to view enrolled students.</div>
+      {% else %}
+        {% if not enrolled %}
+          <div class="sub">No students enrolled in this course yet.</div>
+        {% else %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student_ID</th>
+                <th>Student_Name</th>
+                <th>Semester</th>
+                <th>Enrollment_Date</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in enrolled %}
+                <tr>
+                  <td>{{ s.Student_ID }}</td>
+                  <td>{{ s.Student_Name }}</td>
+                  <td>{{ s.Semester_Name }}</td>
+                  <td>{{ s.Enrollment_Date }}</td>
+                  <td>{{ s.Grade }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="footer">Lecturer view · Data filtered by Lecturer_ID</div>
   </div>
 </body>
 </html>
